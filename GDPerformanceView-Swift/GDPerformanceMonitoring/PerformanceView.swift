@@ -175,7 +175,6 @@ private extension PerformanceView {
 
         self.backgroundColor = .clear
         self.clipsToBounds = true
-        self.isHidden = true
         NotificationCenter.default.addObserver(self, selector: Selector(("keyboardDidShow:")), name: UIResponder.keyboardDidShowNotification, object: nil)
     }
 
