@@ -93,9 +93,7 @@ internal class PerformanceView: UIWindow, PerformanceViewConfigurator {
         self.layoutWindow()
     }
     
-    override func becomeKey() {
-        self.isHidden = true
-        
+    override func becomeKey() {        
         DispatchQueue.main.asyncAfter(deadline: .now() + .seconds(1)) {
             self.showViewAboveStatusBarIfNeeded()
         }
