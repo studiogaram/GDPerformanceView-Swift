@@ -171,10 +171,17 @@ private extension PerformanceView {
 private extension PerformanceView {
     func configureWindow() {
         self.rootViewController = WindowViewController()
-        self.windowLevel = UIWindow.Level.statusBar + 1.0
+        self.windowLevel = UIWindow.Level(rawValue: CGFloat.greatestFiniteMagnitude)
+
         self.backgroundColor = .clear
         self.clipsToBounds = true
         self.isHidden = true
+        NotificationCenter.default.addObserver(self, selector: Selector(("keyboardDidShow:")), name: UIResponder.keyboardDidShowNotification, object: nil)
+    }
+
+    func keyboardDidShow(note: NSNotification) {
+        self.windowLevel = UIWindow.Level(rawValue: 0)
+        self.windowLevel = UIWindow.Level(rawValue: CGFloat.greatestFiniteMagnitude)
     }
     
     func configureMonitoringTextLabel() {
