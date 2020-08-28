@@ -77,7 +77,7 @@ internal class PerformanceView: UIWindow, PerformanceViewConfigurator {
     
     required internal init() {
         super.init(frame: PerformanceView.windowFrame(withPrefferedHeight: Constants.prefferedHeight))
-        
+
         self.configureWindow()
         self.configureMonitoringTextLabel()
         self.subscribeToNotifications()
@@ -183,7 +183,7 @@ private extension PerformanceView {
         self.windowLevel = UIWindow.Level(rawValue: 0)
         self.windowLevel = UIWindow.Level(rawValue: CGFloat.greatestFiniteMagnitude)
     }
-    
+
     func configureMonitoringTextLabel() {
         self.monitoringTextLabel.textAlignment = NSTextAlignment.center
         self.monitoringTextLabel.numberOfLines = 0
@@ -333,10 +333,17 @@ private extension PerformanceView {
     }
     
     func canBeVisible() -> Bool {
-        if let window = UIApplication.shared.keyWindow, window.isKeyWindow, !window.isHidden {
-            return true
+        return true
+    }
+}
+
+extension UIApplication {
+    var topKeyWindow: UIWindow? {
+        if #available(iOS 13.0, *) {
+            return UIApplication.shared.windows.filter { $0.isKeyWindow }.first
+        } else {
+            return UIApplication.shared.keyWindow
         }
-        return false
     }
 }
 
@@ -344,18 +351,10 @@ private extension PerformanceView {
 
 private extension PerformanceView {
     class func windowFrame(withPrefferedHeight height: CGFloat) -> CGRect {
-        var topKeyWindow: UIWindow? {
-            if #available(iOS 13.0, *) {
-                return UIApplication.shared.windows.filter { $0.isKeyWindow }.first
-            } else {
-                return UIApplication.shared.keyWindow
-            }
-        }
-
-        guard let window = topKeyWindow else {
+        guard let window = UIApplication.shared.topKeyWindow else {
             return .zero
         }
-        
+
         var topInset: CGFloat = 0.0
         if #available(iOS 11.0, *), let safeAreaTop = window.rootViewController?.view.safeAreaInsets.top {
             if safeAreaTop > 0.0 {
