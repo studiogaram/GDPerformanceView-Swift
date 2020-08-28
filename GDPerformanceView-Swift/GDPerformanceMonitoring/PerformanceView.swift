@@ -344,7 +344,15 @@ private extension PerformanceView {
 
 private extension PerformanceView {
     class func windowFrame(withPrefferedHeight height: CGFloat) -> CGRect {
-        guard let window = UIApplication.shared.delegate?.window as? UIWindow else {
+        var topKeyWindow: UIWindow? {
+            if #available(iOS 13.0, *) {
+                return UIApplication.shared.windows.filter { $0.isKeyWindow }.first
+            } else {
+                return UIApplication.shared.keyWindow
+            }
+        }
+
+        guard let window = topKeyWindow else {
             return .zero
         }
         
